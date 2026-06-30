@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Interaktif Pola, Barisan, & Deret Bilangan Matematika</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- KaTeX for beautiful math equations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 1);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(203, 213, 225, 1);
+      border-radius: 4px;
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 1);
+    }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(71, 85, 105, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-square-root-variable text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold leading-none text-slate-900 dark:text-white">Kuis Matematika Interaktif</h1>
+          <span class="text-xs text-slate-500 dark:text-slate-400">Pola, Barisan, dan Deret Bilangan</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Timer -->
+        <div class="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-sm font-semibold">
+          <i class="fa-regular fa-clock text-indigo-500"></i>
+          <span id="quiz-timer">00:00:00</span>
+        </div>
+        <!-- Score Mini Tracker -->
+        <div class="flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 px-3 py-1.5 rounded-lg font-semibold text-sm">
+          <i class="fa-solid fa-star"></i>
+          <span id="score-mini">Skor: 0</span>
+        </div>
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:inline"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+    
+    <!-- Left Panel: Sidebar Navigation & Info -->
+    <aside class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6">
+      
+      <!-- Category & Filters Card -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/80 shadow-sm">
+        <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Filter Kategori Soal</h2>
+        <div class="space-y-2" id="filter-container">
+          <button onclick="filterQuestions('all')" class="w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300" id="filter-all">
+            <span>Semua Soal</span>
+            <span class="bg-indigo-200/50 dark:bg-indigo-900/50 px-2 py-0.5 rounded text-xs" id="count-all">56</span>
+          </button>
+          <button onclick="filterQuestions('konfigurasi')" class="w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700" id="filter-konfigurasi">
+            <span>Pola Konfigurasi Objek</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs" id="count-konfigurasi">0</span>
+          </button>
+          <button onclick="filterQuestions('aritmetika')" class="w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700" id="filter-aritmetika">
+            <span>Aritmetika & Deret</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs" id="count-aritmetika">0</span>
+          </button>
+          <button onclick="filterQuestions('geometri')" class="w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700" id="filter-geometri">
+            <span>Geometri & Deret</span>
+            <span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-xs" id="count-geometri">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid Navigation Card -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/80 shadow-sm flex-grow flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Navigasi Soal</h2>
+          <span class="text-xs text-slate-400" id="answered-ratio">0/56 Terjawab</span>
+        </div>
+        
+        <!-- Legend -->
+        <div class="flex items-center gap-3 text-xs mb-4 text-slate-500 dark:text-slate-400">
+          <div class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700 inline-block"></span> Belum
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded bg-indigo-600 inline-block"></span> Sedang
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Terjawab
+          </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-2 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar" id="question-grid">
+          <!-- Dynamically Generated Grid Buttons -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Panel: Interactive Question Board / Dashboard -->
+    <section class="flex-grow flex flex-col gap-6" id="quiz-workspace">
+      
+      <!-- Progress Bar Card -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700/80 shadow-sm">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-semibold text-indigo-600 dark:text-indigo-400" id="current-question-tag">Soal 1 dari 56</span>
+          <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-full font-bold text-slate-600 dark:text-slate-300" id="current-difficulty">Menengah</span>
+        </div>
+        <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+          <div id="progress-bar-fill" class="bg-indigo-600 h-full transition-all duration-300" style="width: 1.78%"></div>
+        </div>
+      </div>
+
+      <!-- Question Board -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700/80 shadow-sm flex flex-col justify-between flex-grow min-h-[450px]">
+        <div>
+          <!-- Question Header & Tag -->
+          <div class="flex items-center gap-2 mb-4">
+            <span id="question-category-tag" class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">Pola Bilangan</span>
+          </div>
+
+          <!-- Question Text -->
+          <div id="question-text" class="text-base sm:text-lg font-semibold text-slate-900 dark:text-white leading-relaxed mb-6">
+            Rumus suku ke-n suatu barisan adalah $U_n = 3n + 2$. Jumlah suku ke-25 dan suku ke-27 dari barisan tersebut adalah...
+          </div>
+
+          <!-- SVG Visualizations Container -->
+          <div id="svg-visualization-container" class="mb-6 flex justify-center bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700/60 hidden">
+            <!-- Dynamic SVG will be injected here -->
+          </div>
+
+          <!-- Options Grid -->
+          <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamic Buttons with Tailwind -->
+          </div>
+        </div>
+
+        <!-- Action Panel -->
+        <div class="border-t border-slate-100 dark:border-slate-700/80 pt-6 mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <button id="prev-btn" onclick="prevQuestion()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Soal Sebelumnya
+          </button>
+          
+          <button id="show-explanation-btn" onclick="toggleExplanation()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-indigo-200 dark:border-indigo-900 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition flex items-center justify-center gap-2 hidden">
+            <i class="fa-regular fa-lightbulb"></i> Lihat Pembahasan
+          </button>
+
+          <button id="next-btn" onclick="nextQuestion()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2">
+            Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Explanation Collapse Panel -->
+      <div id="explanation-panel" class="bg-emerald-50 dark:bg-slate-800/40 border border-emerald-200 dark:border-emerald-950/80 rounded-2xl p-6 shadow-sm hidden">
+        <h3 class="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-400 text-sm uppercase tracking-wider mb-3">
+          <i class="fa-solid fa-graduation-cap"></i> Alternatif Pembahasan
+        </h3>
+        <div id="explanation-text" class="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+          <!-- Injected explanation -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Quiz Complete Dashboard / Results (Initially Hidden) -->
+    <section id="results-dashboard" class="flex-grow flex-col gap-6 hidden">
+      <!-- Top Overview Card -->
+      <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl"></div>
+        <div class="relative z-10">
+          <span class="text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full border border-indigo-500/30">Ringkasan Hasil Evaluasi</span>
+          <h2 class="text-3xl font-extrabold mt-4 mb-2">Selamat, Anda Telah Menyelesaikan Kuis!</h2>
+          <p class="text-slate-300 text-sm sm:text-base max-w-2xl mb-8">Pola, Barisan, dan Deret Bilangan adalah dasar pembentukan logika berpikir matematis. Mari analisa hasil Anda di bawah ini.</p>
+          
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+              <span class="text-xs text-slate-400 block mb-1">Skor Akhir</span>
+              <span class="text-3xl font-black text-indigo-300" id="result-score">0</span>
+              <span class="text-xs text-slate-400 block mt-1">(Skor Maksimal: 224)</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+              <span class="text-xs text-slate-400 block mb-1">Akurasi Jawaban</span>
+              <span class="text-3xl font-black text-emerald-400" id="result-accuracy">0%</span>
+              <span class="text-xs text-slate-400 block mt-1" id="result-ratio">0 dari 56 benar</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+              <span class="text-xs text-slate-400 block mb-1">Waktu Pengerjaan</span>
+              <span class="text-3xl font-black text-amber-300 font-mono" id="result-time">00:00:00</span>
+              <span class="text-xs text-slate-400 block mt-1">Efisiensi Tinggi</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+              <span class="text-xs text-slate-400 block mb-1">Predikat Kelulusan</span>
+              <span class="text-xl font-bold text-sky-400 block leading-tight mt-1" id="result-status">Cukup</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Topic Breakdown -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-6 shadow-sm">
+          <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">Penguasaan Berdasarkan Topik</h3>
+          <div class="space-y-4" id="topic-bars">
+            <!-- Bars filled dynamically -->
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Rekomendasi Belajar</h3>
+            <p id="learning-recommendation" class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
+              Sistem sedang memproses hasil pengerjaan kuis Anda...
+            </p>
+          </div>
+          <button onclick="restartQuiz()" class="w-full py-3 px-5 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20">
+            <i class="fa-solid fa-rotate-left mr-2"></i> Ulangi Tes / Belajar Kembali
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 transition-colors mt-auto py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+      <div>© 2026 Math Learning Kit. Seluruh hak cipta dilindungi.</div>
+      <div class="flex space-x-4">
+        <span class="text-indigo-600 dark:text-indigo-400 font-semibold">Modul Latihan SMP/MTs</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Quiz Data and Script -->
+  <script>
+    // Theme logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+    });
+
+    // Main Quiz Database (56 Questions)
+    const questions = [
+      {
+        id: 1,
+        category: "aritmetika",
+        difficulty: "Mudah",
+        question: "Rumus suku ke-n suatu barisan adalah $U_n = 3n + 2$. Jumlah suku ke-25 dan suku ke-27 dari barisan tersebut adalah...",
+        options: ["154", "160", "164", "166"],
+        answerIndex: 1, // B
+        explanation: "Suku ke-25 adalah $U_{25} = 3(25) + 2 = 75 + 2 = 77$.<br>Suku ke-27 adalah $U_{27} = 3(27) + 2 = 81 + 2 = 83$.<br>Jumlah suku ke-25 dan suku ke-27 adalah $77 + 83 = 160$."
+      },
+      {
+        id: 2,
+        category: "aritmetika",
+        difficulty: "Sukar",
+        question: "Peneliti A dan B mengembangbiakkan masing-masing 35 amuba. Amuba Peneliti A mampu membelah diri menjadi dua setiap 15 menit sedangkan amuba Peneliti B membelah diri menjadi dua setiap 25 menit. Amuba peneliti A saat ini menjadi 1.120. Peneliti B akan memiliki amuba saat ini sebanyak...",
+        options: ["135", "192", "256", "280"],
+        answerIndex: 3, // D
+        explanation: "Perkembangan Amuba Peneliti A:<br>$1.120 = 35 \\times 2^{t_A} \\implies 2^{t_A} = 32 \\implies t_A = 5$ kali pembelahan.<br>Waktu pembelahan Peneliti A adalah $5 \\times 15 \\text{ menit} = 75 \\text{ menit}$.<br>Dalam waktu yang sama (75 menit), Amuba Peneliti B membelah setiap 25 menit, sehingga terjadi $75 / 25 = 3$ kali pembelahan.<br>Banyak amuba Peneliti B adalah $35 \\times 2^3 = 35 \\times 8 = 280$ amuba."
+      },
+      {
+        id: 3,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Perhatikan pola yang dibentuk dari potongan lidi berikut ini! Banyak potongan lidi pada pola ke-55 adalah...",
+        options: ["166", "169", "170", "175"],
+        answerIndex: 0, // A
+        svgType: "squares-lidi",
+        explanation: "Pola lidi membentuk barisan aritmetika persegi bergandengan:<br>Pola 1 = 4 lidi (1 persegi)<br>Pola 2 = 7 lidi (2 persegi bergandengan)<br>Pola 3 = 10 lidi (3 persegi bergandengan)<br>Maka, suku pertama $a = 4$ dan beda $b = 3$.<br>Rumus suku ke-n adalah $U_n = 3n + 1$.<br>Pola ke-55 adalah $U_{55} = 3(55) + 1 = 165 + 1 = 166$."
+      },
+      {
+        id: 4,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Jumlah bilangan kelipatan 3 dan 4 antara 200 dan 300 adalah...",
+        options: ["1.968", "1.764", "1.680", "1.476"],
+        answerIndex: 0, // A
+        explanation: "Kelipatan 3 dan 4 adalah kelipatan 12.<br>Bilangan kelipatan 12 antara 200 dan 300:<br>Suku pertama $a = 204$ (karena $12 \\times 17 = 204$).<br>Suku terakhir $U_n = 288$ (karena $12 \\times 24 = 288$).<br>Cari banyak suku (n):<br>$288 = 204 + (n-1)12 \\implies 84 = 12(n-1) \\implies n-1 = 7 \\implies n = 8$.<br>Jumlah 8 suku pertama:<br>$S_8 = \\frac{8}{2}(204 + 288) = 4 \\times 492 = 1.968$."
+      },
+      {
+        id: 5,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Tiga suku berikutnya dari barisan 4, 6, 10, 16, 24, ... adalah...",
+        options: ["32, 42, 54", "34, 44, 56", "34, 46, 60", "32, 48, 80"],
+        answerIndex: 2, // C
+        explanation: "Analisis beda berurutan dari barisan:<br>4 ke 6 (+2)<br>6 ke 10 (+4)<br>10 ke 16 (+6)<br>16 ke 24 (+8)<br>Pola beda adalah bilangan genap positif: +2, +4, +6, +8, +10, +12, +14.<br>Suku selanjutnya:<br>$24 + 10 = 34$<br>$34 + 12 = 46$<br>$46 + 14 = 60$."
+      },
+      {
+        id: 6,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Perhatikan pola yang dibentuk dari potongan lidi berikut ini! Banyak potongan lidi pada pola ke-50 adalah...",
+        options: ["195", "199", "203", "207"],
+        answerIndex: 1, // B
+        svgType: "triangles-lidi",
+        explanation: "Pola potongan lidi membentuk barisan segitiga bergandengan:<br>Pola 1 = 3 lidi (1 segitiga)<br>Pola 2 = 7 lidi (pola segitiga bersilangan)<br>Pola 3 = 11 lidi<br>Ini adalah barisan aritmetika dengan suku pertama $a = 3$ dan beda $b = 4$.<br>Rumus suku ke-n: $U_n = 4n - 1$.<br>Banyak lidi pada pola ke-50 adalah $U_{50} = 4(50) - 1 = 200 - 1 = 199$."
+      },
+      {
+        id: 7,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Jumlah bilangan kelipatan 2 dan 3 antara 200 dan 400 adalah...",
+        options: ["9.900", "13.200", "19.600", "19.800"],
+        answerIndex: 0, // A
+        explanation: "Kelipatan 2 dan 3 adalah kelipatan 6.<br>Bilangan kelipatan 6 antara 200 dan 400:<br>Suku pertama $a = 204$<br>Suku terakhir $U_n = 396$<br>Cari banyak suku (n):<br>$396 = 204 + (n-1)6 \\implies 192 = 6(n-1) \\implies n-1 = 32 \\implies n = 33$.<br>Jumlah total suku:<br>$S_{33} = \\frac{33}{2}(204 + 396) = \\frac{33}{2}(600) = 33 \\times 300 = 9.900$."
+      },
+      {
+        id: 8,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Tiga suku berikutnya dari barisan 25, 27, 30, 34, ... adalah...",
+        options: ["39, 42, 46", "38, 43, 49", "39, 44, 49", "39, 45, 52"],
+        answerIndex: 3, // D
+        explanation: "Beda bertahap:<br>25 ke 27 (+2)<br>27 ke 30 (+3)<br>30 ke 34 (+4)<br>Beda selanjutnya bertambah satu tingkat (+5, +6, +7).<br>Maka tiga suku berikutnya:<br>$34 + 5 = 39$<br>$39 + 6 = 45$<br>$45 + 7 = 52$."
+      },
+      {
+        id: 9,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Gambar berpola di atas terbentuk dari beberapa persegi. Banyak persegi pada gambar ke-7 adalah...",
+        options: ["21", "25", "29", "46"],
+        answerIndex: 1, // B
+        svgType: "cross-squares",
+        explanation: "Perhatikan perkembangan pola persegi:<br>Pola 1 = 1 persegi<br>Pola 2 = 5 persegi (tambah 4 lengan samping panjang 1)<br>Pola 3 = 9 persegi (tambah 4 lengan samping panjang 2)<br>Ini adalah barisan aritmetika dengan suku pertama $a = 1$ dan beda $b = 4$.<br>Rumus pola ke-n: $U_n = 4(n-1) + 1 = 4n - 3$.<br>Pola ke-7: $U_7 = 4(7) - 3 = 28 - 3 = 25$ persegi."
+      },
+      {
+        id: 10,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Tiga suku berikutnya dari barisan 1, 5, 11, 19, ... adalah...",
+        options: ["29, 42, 56", "29, 41, 55", "29, 40, 49", "29, 39, 49"],
+        answerIndex: 1, // B
+        explanation: "Beda bertingkat dua:<br>1 ke 5 (+4)<br>5 ke 11 (+6)<br>11 ke 19 (+8)<br>Berikutnya bedanya berkelanjutan +10, +12, +14.<br>Suku-suku berikutnya:<br>$19 + 10 = 29$<br>$29 + 12 = 41$<br>$41 + 14 = 55$."
+      },
+      {
+        id: 11,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Perhatikan barisan bilangan berikut: 12, 20, 30, 42, 56, ... Suku ke-12 dari barisan tersebut adalah...",
+        options: ["132", "156", "182", "210"],
+        answerIndex: 3, // D
+        explanation: "Bilangan ini dapat difaktorkan sebagai perkalian dua bilangan berurutan:<br>$12 = 3 \\times 4$<br>$20 = 4 \\times 5$<br>$30 = 5 \\times 6$<br>$42 = 6 \\times 7$<br>$56 = 7 \\times 8$<br>Terlihat polanya adalah $U_n = (n+2)(n+3)$.<br>Untuk suku ke-12 ($n = 12$):<br>$U_{12} = (12+2)(12+3) = 14 \\times 15 = 210$."
+      },
+      {
+        id: 12,
+        category: "konfigurasi",
+        difficulty: "Sukar",
+        question: "Gambar berikut adalah segitiga yang disusun dari batang korek api dan titik simpul di setiap ujungnya. Banyak batang korek api yang dibutuhkan untuk membuat pola ke-6 adalah...",
+        options: ["36", "48", "63", "84"],
+        answerIndex: 2, // C
+        svgType: "matchstick-pyramid",
+        explanation: "Kebutuhan batang korek api pada tingkat piramida segitiga:<br>Pola 1 = 3 batang<br>Pola 2 = 9 batang<br>Pola 3 = 18 batang<br>Ini adalah deret bilangan segitiga dikali 3:<br>$U_n = 3 \\times \\frac{n(n+1)}{2} = \\frac{3}{2}n(n+1)$.<br>Pola ke-6: $U_6 = \\frac{3}{2}(6)(7) = 3 \\times 21 = 63$ batang."
+      },
+      {
+        id: 13,
+        category: "aritmetika",
+        difficulty: "Sukar",
+        question: "Jumlah semua bilangan asli antara 20 dan 140 yang habis dibagi 3 tetapi tidak habis dibagi 2 adalah...",
+        options: ["1530", "1540", "1550", "1560"],
+        answerIndex: 3, // D
+        explanation: "Bilangan yang habis dibagi 3 tetapi tidak habis dibagi 2 adalah bilangan kelipatan 3 yang ganjil.<br>Bilangannya: 21, 27, 33, 39, ..., 135.<br>Ini barisan aritmetika ganjil berkelipatan 6 dengan suku pertama $a = 21$ dan beda $b = 6$.<br>Suku terakhir $U_n = 135$.<br>$135 = 21 + (n-1)6 \\implies 114 = 6(n-1) \\implies n-1 = 19 \\implies n = 20$.<br>Jumlah deret tersebut:<br>$S_{20} = \\frac{20}{2}(21 + 135) = 10(156) = 1.560$."
+      },
+      {
+        id: 14,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Lengkapi barisan berikut: 3, 3, 9, 45, 315, ...",
+        options: ["2538", "2853", "2385", "2835"],
+        answerIndex: 3, // D
+        explanation: "Pola perkalian barisan adalah kelipatan bilangan ganjil berturut-turut:<br>$3 \\times 1 = 3$<br>$3 \\times 3 = 9$<br>$9 \\times 5 = 45$<br>$45 \\times 7 = 315$<br>Maka bilangan berikutnya adalah $315 \\times 9 = 2.835$."
+      },
+      {
+        id: 15,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Diberikan barisan 81, 2, 27, 6, 9, 18, a, b. Nilai b dan a berturut-turut adalah...",
+        options: ["54 dan 3", "3 dan 54", "3 dan 45", "45 dan 3"],
+        answerIndex: 0, // A
+        explanation: "Barisan ini terdiri dari dua barisan berselang-seling:<br>Suku ganjil: 81, 27, 9, a (pola: dibagi 3). Maka $a = 9 / 3 = 3$.<br>Suku genap: 2, 6, 18, b (pola: dikali 3). Maka $b = 18 \\times 3 = 54$.<br>Maka nilai b dan a adalah 54 dan 3."
+      },
+      {
+        id: 16,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Lengkapi barisan berikut: 3, 6, 12, 15, 30, 33, ...",
+        options: ["36", "66", "99", "38"],
+        answerIndex: 1, // B
+        explanation: "Pola operasi matematika selang-seling:<br>$3 \\times 2 = 6$<br>$6 + 3 = 9 \\implies$ polanya: $(\\times 2)$ lalu $(+3)$ secara bergantian.<br>$3 \\times 2 = 6$<br>$6 + 6 = 12$ lalu $12 + 3 = 15$. Jika disederhanakan: $(\\times 2)$ lalu $(+3)$ berturut-turut pada tahap akhir. Maka setelah 33 adalah $33 \\times 2 = 66$."
+      },
+      {
+        id: 17,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Lengkapi barisan berikut: 3, 3, 6, 18, 72, 360, ...",
+        options: ["2520", "720", "2160", "1440"],
+        answerIndex: 2, // C (2160)
+        explanation: "Pola perkalian bertingkat naik:<br>$3 \\times 1 = 3$<br>$3 \\times 2 = 6$<br>$6 \\times 3 = 18$<br>$18 \\times 4 = 72$<br>$72 \\times 5 = 360$<br>Suku berikutnya haruslah dikali 6:<br>$360 \\times 6 = 2.160$."
+      },
+      {
+        id: 18,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Berapakah nilai a dan b pada barisan berikut ini: 2, 3, 4, 6, 8, 9, 16, a, b, ...",
+        options: ["18 dan 19", "27 dan 32", "12 dan 32", "32 dan 33"],
+        answerIndex: 2, // C
+        explanation: "Barisan bercabang dua:<br>Cabang Ganjil: 2, 4, 8, 16, b (Pola: dikali 2). Maka $b = 16 \\times 2 = 32$.<br>Cabang Genap: 3, 6, 9, a (Pola: ditambah 3). Maka $a = 9 + 3 = 12$.<br>Sehingga $a = 12$ dan $b = 32$."
+      },
+      {
+        id: 19,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Suku ke-n dari barisan 1, 3, 6, 10, 15, 21, ... adalah...",
+        options: ["$n(n+1)$", "$\\frac{n(n+1)}{2}$", "$n(n+2)$", "$\\frac{n(n+2)}{2}$"],
+        answerIndex: 1, // B
+        explanation: "Ini adalah pola bilangan segitiga standard.<br>Formulasinya adalah $U_n = \\frac{1}{2}n(n+1) = \\frac{n(n+1)}{2}$."
+      },
+      {
+        id: 20,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Dari suatu barisan aritmatika diketahui $U_3 = 5$, $U_7 = 13$ dan beda $b = 2$. Rumus suku ke-n barisan bilangan tersebut adalah...",
+        options: ["$U_n = 2n + 1$", "$U_n = 2n - 1$", "$U_n = 3n - 1$", "$U_n = n^2 - 1$"],
+        answerIndex: 1, // B
+        explanation: "Diketahui $U_3 = a + 2b = 5$. Karena $b = 2$, maka:<br>$a + 2(2) = 5 \\implies a + 4 = 5 \\implies a = 1$.<br>Rumus suku ke-n:<br>$U_n = a + (n-1)b = 1 + (n-1)2 = 1 + 2n - 2 = 2n - 1$."
+      },
+      {
+        id: 21,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Suku ke-n dari barisan bilangan segitiga 1, 3, 6, 10, 15, 21, ... adalah...",
+        options: ["$n(n+1)$", "$\\frac{n(n+1)}{2}$", "$n(n+2)$", "$\\frac{n(n+2)}{2}$"],
+        answerIndex: 1, // B
+        explanation: "Sama seperti soal nomor 19, barisan bilangan segitiga diformulasikan dengan rumus $U_n = \\frac{n(n+1)}{2}$."
+      },
+      {
+        id: 22,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Rumus suku ke-n dari barisan bilangan 0, 4, 10, 18, ... adalah...",
+        options: ["$\\frac{1}{2}n(n+1)$", "$2n(n+1)$", "$(n-1)(n+2)$", "$(n+1)(n+2)$"],
+        answerIndex: 2, // C
+        explanation: "Uji pilihan jawaban untuk $n = 1$:<br>Pilihan C: $(n-1)(n+2) = (1-1)(1+2) = 0 \\times 3 = 0$ (Cocok).<br>Uji untuk $n = 2$: $(2-1)(2+2) = 1 \\times 4 = 4$ (Cocok).<br>Uji untuk $n = 3$: $(3-1)(3+2) = 2 \\times 5 = 10$ (Cocok).<br>Maka rumus yang benar adalah $(n-1)(n+2)$."
+      },
+      {
+        id: 23,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Suatu barisan bilangan 2, 6, 12, 20, ... Suku yang ke-20 adalah...",
+        options: ["420", "480", "500", "602"],
+        answerIndex: 0, // A
+        explanation: "Pola barisan persegi panjang:<br>$U_1 = 1 \\times 2 = 2$<br>$U_2 = 2 \\times 3 = 6$<br>$U_3 = 3 \\times 4 = 12$<br>Rumus umum: $U_n = n(n+1)$.<br>Untuk suku ke-20 ($n = 20$):<br>$U_{20} = 20 \\times (20 + 1) = 20 \\times 21 = 420$."
+      },
+      {
+        id: 24,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Bilangan-bilangan disusun dan dikelompokkan menurut pola: (2,6), (3,7), (4, 8), (5, 9), dan seterusnya. Bilangan pada kelompok ke-62 adalah...",
+        options: ["(61, 65)", "(62, 66)", "(63, 67)", "(64, 68)"],
+        answerIndex: 2, // C
+        explanation: "Mari kita amati hubungan nomor kelompok ($n$) dengan pasangan bilangan:<br>Kelompok 1: $(2,6) \\implies (1+1, 1+5)$<br>Kelompok 2: $(3,7) \\implies (2+1, 2+5)$<br>Pola umum kelompok ke-n: $(n+1, n+5)$.<br>Untuk kelompok ke-62: $(62+1, 62+5) = (63, 67)$."
+      },
+      {
+        id: 25,
+        category: "konfigurasi",
+        difficulty: "Sukar",
+        question: "Perhatikan susunan bola-bola di atas! Banyak lingkaran bola pada pola ke-50 adalah...",
+        options: ["1275", "1326", "1452", "1546"],
+        answerIndex: 1, // B (1326)
+        svgType: "del-circles",
+        explanation: "Perhatikan susunan bola tingkat segitiga:<br>Pola 1 = 3 bola (segitiga tingkat 2: $1 + 2 = 3$)<br>Pola 2 = 6 bola (segitiga tingkat 3: $1 + 2 + 3 = 6$)<br>Pola 3 = 10 bola (segitiga tingkat 4: $1 + 2 + 3 + 4 = 10$)<br>Maka, rumus pola ke-n adalah pola bilangan segitiga tingkat $(n+1)$:<br>$U_n = \\frac{(n+1)(n+2)}{2}$.<br>Untuk pola ke-50 ($n = 50$):<br>$U_{50} = \\frac{(50+1)(50+2)}{2} = \\frac{51 \\times 52}{2} = 51 \\times 26 = 1.326$."
+      },
+      {
+        id: 26,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Perhatikan gambar susunan titik berbentuk X di atas! Jika pola tersebut dilanjutkan, banyak bulatan titik pada pola ke-61 adalah...",
+        options: ["249", "241", "66", "64"],
+        answerIndex: 1, // B
+        svgType: "cross-dots",
+        explanation: "Susunan bulatan berbentuk huruf X:<br>Pola 1 = 1 bulatan (pusat)<br>Pola 2 = 5 bulatan (pusat + 4 ujung lengan)<br>Pola 3 = 9 bulatan (pusat + 8 di lengan)<br>Pola 4 = 13 bulatan (pusat + 12 di lengan)<br>Pola merupakan barisan aritmetika dengan suku pertama $a = 1$ dan beda $b = 4$.<br>Rumus pola ke-n: $U_n = 4(n-1) + 1 = 4n - 3$.<br>Untuk pola ke-61: $U_{61} = 4(61) - 3 = 244 - 3 = 241$."
+      },
+      {
+        id: 27,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Jumlah semua bilangan kelipatan 3 dan 4 antara 200 dan 450 adalah...",
+        options: ["8.700", "6.804", "6.360", "6.300"],
+        answerIndex: 1, // B
+        explanation: "Kelipatan 3 dan 4 adalah kelipatan 12.<br>Suku pertama setelah 200: $a = 204$.<br>Suku terakhir sebelum 450: $U_n = 444$.<br>Tentukan nilai n:<br>$444 = 204 + (n-1)12 \\implies 240 = 12(n-1) \\implies n-1 = 20 \\implies n = 21$.<br>Jumlah deret:<br>$S_{21} = \\frac{21}{2}(204 + 444) = \\frac{21}{2}(648) = 21 \\times 324 = 6.804$."
+      },
+      {
+        id: 28,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Gambar berikut adalah susunan segitiga dari batang korek api. Banyak batang korek api yang diperlukan untuk membuat pola ke-7 adalah...",
+        options: ["45", "63", "84", "108"],
+        answerIndex: 2, // C
+        svgType: "matchstick-pyramid-7",
+        explanation: "Barisan kebutuhan korek api mengikuti rumus pola segitiga dikali 3: $U_n = \\frac{3}{2}n(n+1)$.<br>Pola ke-7: $U_7 = \\frac{3}{2}(7)(8) = 3 \\times 28 = 84$ batang."
+      },
+      {
+        id: 29,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Suku pertama dan kelima suatu barisan geometri berturut-turut 5 dan 80. Suku ke-9 barisan tersebut adalah...",
+        options: ["90", "405", "940", "1.280"],
+        answerIndex: 3, // D
+        explanation: "Diketahui $a = 5$ and $U_5 = a \\cdot r^4 = 80$.<br>Maka: $5 \\cdot r^4 = 80 \\implies r^4 = 16 \\implies r = 2$.<br>Suku ke-9:<br>$U_9 = a \\cdot r^8 = 5 \\times 2^8 = 5 \\times 256 = 1.280$."
+      },
+      {
+        id: 30,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Seutas tali dipotong menjadi 5 bagian sehingga ukurannya membentuk deret geometri. Jika panjang potongan tali terpendek 4 cm dan potongan tali terpanjang 324 cm, maka panjang tali semula adalah...",
+        options: ["328 cm", "484 cm", "648 cm", "820 cm"],
+        answerIndex: 1, // B
+        explanation: "Diketahui $a = 4$, $n = 5$, dan $U_5 = a \\cdot r^4 = 324$.<br>Maka: $4 \\cdot r^4 = 324 \\implies r^4 = 81 \\implies r = 3$.<br>Panjang tali semula ($S_5$):<br>$S_5 = \\frac{a(r^5 - 1)}{r - 1} = \\frac{4(3^5 - 1)}{3 - 1} = \\frac{4(243 - 1)}{2} = 2 \\times 242 = 484 \\text{ cm}$."
+      },
+      {
+        id: 31,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Seutas tali dipotong menjadi 5 bagian dengan panjang masing-masing bagian membentuk barisan geometri. Jika potongan tali yang terpendek 5 cm dan potongan tali terpanjang 80 cm, maka panjang tali semula adalah...",
+        options: ["170 cm", "165 cm", "160 cm", "155 cm"],
+        answerIndex: 3, // D
+        explanation: "Diketahui $a = 5$, $n = 5$, dan $U_5 = 80$.<br>Maka: $5 \\cdot r^4 = 80 \\implies r^4 = 16 \\implies r = 2$.<br>Maka panjang tali semula ($S_5$):<br>$S_5 = \\frac{5(2^5 - 1)}{2 - 1} = 5 \\times 31 = 155 \\text{ cm}$."
+      },
+      {
+        id: 32,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Jumlah bilangan kelipatan 3 antara 200 dan 400 adalah...",
+        options: ["19.500", "20.100", "30.360", "40.200"],
+        answerIndex: 1, // B
+        explanation: "Bilangan kelipatan 3 antara 200 dan 400:<br>Suku pertama $a = 201$ dan suku terakhir $U_n = 399$.<br>Banyak suku:<br>$399 = 201 + (n-1)3 \\implies 198 = 3(n-1) \\implies n-1 = 66 \\implies n = 67$.<br>Jumlah deret:<br>$S_{67} = \\frac{67}{2}(201 + 399) = \\frac{67}{2}(600) = 67 \\times 300 = 20.100$."
+      },
+      {
+        id: 33,
+        category: "aritmetika",
+        difficulty: "Mudah",
+        question: "Diketahui barisan bilangan 3, 8, 13, 18, 23, ... Suku ke-32 adalah...",
+        options: ["465", "168", "158", "153"],
+        answerIndex: 2, // C
+        explanation: "Ini adalah barisan aritmetika dengan $a = 3$ dan beda $b = 5$.<br>Suku ke-32:<br>$U_{32} = a + 31b = 3 + 31(5) = 3 + 155 = 158$."
+      },
+      {
+        id: 34,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Suku ketiga dan suku kelima barisan aritmetika adalah 17 dan 31. Suku ke-20 dari barisan tersebut adalah...",
+        options: ["136", "168", "158", "153"],
+        answerIndex: 0, // A
+        explanation: "$U_3 = a + 2b = 17$<br>$U_5 = a + 4b = 31$<br>Kurangkan persamaan: $2b = 14 \\implies b = 7$.<br>Substitusi: $a + 2(7) = 17 \\implies a = 3$.<br>Suku ke-20:<br>$U_{20} = a + 19b = 3 + 19(7) = 3 + 133 = 136$."
+      },
+      {
+        id: 35,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Dari barisan aritmetika diketahui $U_3 = 18$ dan $U_7 = 38$. Jumlah 24 suku pertama adalah...",
+        options: ["786", "1.248", "1.572", "3.144"],
+        answerIndex: 2, // C
+        explanation: "$U_3 = a + 2b = 18$<br>$U_7 = a + 6b = 38$<br>Kurangkan: $4b = 20 \\implies b = 5$.<br>Maka: $a + 10 = 18 \\implies a = 8$.<br>Jumlah 24 suku pertama:<br>$S_{24} = \\frac{24}{2}[2(8) + 23(5)] = 12[16 + 115] = 12 \\times 131 = 1.572$."
+      },
+      {
+        id: 36,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Banyak kursi pada baris pertama sebuah gedung pertunjukan adalah 20 kursi, baris kedua 23 kursi, dan seterusnya sehingga banyak kursi baris berikutnya selalu bertambah 3 kursi. Jika dalam gedung tersebut terdapat 20 baris kursi, maka jumlah kursi pada gedung tersebut adalah...",
+        options: ["270 kursi", "970 kursi", "1.000 kursi", "1.003 kursi"],
+        answerIndex: 1, // B
+        explanation: "Ini persoalan deret aritmetika dengan $a = 20, b = 3, n = 20$.<br>Jumlah kursi seluruhnya:<br>$S_{20} = \\frac{20}{2}[2(20) + (19)3] = 10[40 + 57] = 10 \\times 97 = 970$ kursi."
+      },
+      {
+        id: 37,
+        category: "aritmetika",
+        difficulty: "Mudah",
+        question: "Suku ke-48 dari barisan bilangan 3, 10, 17, 24, 31, ... adalah...",
+        options: ["147", "151", "332", "336"],
+        answerIndex: 2, // C
+        explanation: "Barisan aritmetika dengan $a = 3, b = 7$.<br>Suku ke-48:<br>$U_{48} = a + 47b = 3 + 47(7) = 3 + 329 = 332$."
+      },
+      {
+        id: 38,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Rumus suku ke-n dari barisan bilangan $\\frac{1}{2}, 1, 2, 4, 8, ...$ adalah...",
+        options: ["$2^{n+1}$", "$2^n$", "$2^{n-1}$", "$2^{n-2}$"],
+        answerIndex: 3, // D
+        explanation: "Ini barisan geometri dengan $a = \\frac{1}{2}$ dan rasio $r = 2$.<br>Rumus suku ke-n:<br>$U_n = a \\cdot r^{n-1} = \\frac{1}{2} \\cdot 2^{n-1} = 2^{-1} \\cdot 2^{n-1} = 2^{n-2}$."
+      },
+      {
+        id: 39,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Suatu barisan aritmetika suku ke-2 dan suku ke-5 masing-masing 19 dan 31. Jumlah 30 suku pertama adalah...",
+        options: ["2.280", "2.190", "1.815", "364"],
+        answerIndex: 1, // B
+        explanation: "$U_2 = a + b = 19$<br>$U_5 = a + 4b = 31$<br>Selisih: $3b = 12 \\implies b = 4$.<br>Maka $a = 15$.<br>Jumlah 30 suku pertama:<br>$S_{30} = \\frac{30}{2}[2(15) + 29(4)] = 15[30 + 116] = 15 \\times 146 = 2.190$."
+      },
+      {
+        id: 40,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Dua suku berikutnya dari barisan 3, 4, 6, 9, ... adalah...",
+        options: ["13, 18", "13, 17", "12, 26", "12, 15"],
+        answerIndex: 0, // A
+        explanation: "Pola penambahan beda berurutan:<br>3 ke 4 (+1)<br>4 ke 6 (+2)<br>6 ke 9 (+3)<br>Maka dua suku berikutnya ditambah (+4) dan (+5).<br>$9 + 4 = 13$<br>$13 + 5 = 18$."
+      },
+      {
+        id: 41,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Dari barisan aritmetika diketahui suku ke-7 adalah 22 dan suku ke-11 adalah 34. Jumlah 18 suku pertama adalah...",
+        options: ["531", "666", "1062", "1332"],
+        answerIndex: 0, // A
+        explanation: "$U_7 = a + 6b = 22$<br>$U_{11} = a + 10b = 34$<br>Selisih: $4b = 12 \\implies b = 3$.<br>Maka $a = 4$.<br>Jumlah 18 suku pertama:<br>$S_{18} = \\frac{18}{2}[2(4) + 17(3)] = 9[8 + 51] = 9 \\times 59 = 531$."
+      },
+      {
+        id: 42,
+        category: "geometri",
+        difficulty: "Menengah",
+        question: "Bakteri akan membelah diri menjadi dua setiap 30 menit. Jika mula-mula ada 25 bakteri, maka banyaknya bakteri selama 4 jam adalah...",
+        options: ["3.000", "3.200", "6.000", "6.400"],
+        answerIndex: 3, // D
+        explanation: "Durasi 4 jam = 240 menit.<br>Banyak pembelahan $n = 240 / 30 = 8$ kali.<br>Jumlah akhir bakteri adalah $25 \\times 2^8 = 25 \\times 256 = 6.400$."
+      },
+      {
+        id: 43,
+        category: "aritmetika",
+        difficulty: "Mudah",
+        question: "Diketahui $U_n = 2n^2 - 5$. Nilai dari $U_4 + U_5$ adalah...",
+        options: ["154", "82", "72", "26"],
+        answerIndex: 2, // C
+        explanation: "$U_4 = 2(4^2) - 5 = 32 - 5 = 27$.<br>$U_5 = 2(5^2) - 5 = 50 - 5 = 45$.<br>$U_4 + U_5 = 27 + 45 = 72$."
+      },
+      {
+        id: 44,
+        category: "konfigurasi",
+        difficulty: "Mudah",
+        question: "Dua suku berikutnya dari barisan 1, 3, 7, 13, ... adalah...",
+        options: ["21 dan 31", "19 dan 27", "19 dan 25", "17 dan 23"],
+        answerIndex: 0, // A
+        explanation: "Beda bertahap bilangan genap:<br>1 ke 3 (+2)<br>3 ke 7 (+4)<br>7 ke 13 (+6)<br>Suku berikutnya berturut-turut ditambah (+8) dan (+10):<br>$13 + 8 = 21$<br>$21 + 10 = 31$."
+      },
+      {
+        id: 45,
+        category: "aritmetika",
+        difficulty: "Sukar",
+        question: "Satu pasukan parade drum band yang berjumlah 49 orang membentuk formasi barisan. Paling depan 1 orang, kemudian di belakangnya bertambah 2, dan berikutnya bertambah lagi 2 dan seterusnya. Maka banyaknya orang pada barisan terakhir adalah...",
+        options: ["11", "13", "15", "17"],
+        answerIndex: 1, // B
+        explanation: "Formasi berbentuk barisan aritmetika dengan $a = 1$ dan beda $b = 2$.<br>Jumlah total $S_n = 49$.<br>$S_n = \\frac{n}{2}[2a + (n-1)b] \\implies 49 = \\frac{n}{2}[2(1) + (n-1)2] \\implies 49 = n^2 \\implies n = 7$.<br>Suku terakhir (baris ke-7):<br>$U_7 = a + 6b = 1 + 6(2) = 13$ orang."
+      },
+      {
+        id: 46,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Diketahui deret aritmetika dengan nilai suku ke-6 adalah 35 dan suku ke-9 adalah 26. Jumlah 25 suku pertama deret aritmetika tersebut adalah...",
+        options: ["275", "312", "350", "396"],
+        answerIndex: 2, // C
+        explanation: "Diketahui $U_6 = 35$ dan $U_9 = 26$.<br>$3b = 26 - 35 = -9 \\implies b = -3$.<br>Maka: $a + 5(-3) = 35 \\implies a = 50$.<br>Jumlah 25 suku pertama:<br>$S_{25} = \\frac{25}{2}[2(50) + 24(-3)] = \\frac{25}{2}[100 - 72] = \\frac{25}{2}(28) = 25 \\times 14 = 350$."
+      },
+      {
+        id: 47,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Suku ke-4 dan suku ke-9 suatu barisan aritmetika berturut-turut adalah 110 dan 150. Suku ke-30 barisan tersebut adalah...",
+        options: ["308", "318", "326", "344"],
+        answerIndex: 1, // B
+        explanation: "$U_4 = a + 3b = 110$<br>$U_9 = a + 8b = 150$<br>Selisih: $5b = 40 \\implies b = 8$.<br>Maka: $a + 24 = 110 \\implies a = 86$.<br>Suku ke-30:<br>$U_{30} = 86 + 29(8) = 86 + 232 = 318$."
+      },
+      {
+        id: 48,
+        category: "geometri",
+        difficulty: "Sukar",
+        question: "Dari barisan geometri diketahui bahwa $U_3 = 4$ dan $U_9 = 256$, maka $U_{12}$ adalah...",
+        options: ["2049", "2048", "2047", "2046"],
+        answerIndex: 1, // B
+        explanation: "Rasio barisan geometri:<br>$\\frac{U_9}{U_3} = r^6 = \\frac{256}{4} = 64 \\implies r = 2$.<br>Maka, suku ke-12 ($U_{12}$):<br>$U_{12} = U_9 \\cdot r^3 = 256 \\times 2^3 = 256 \\times 8 = 2.048$."
+      },
+      {
+        id: 49,
+        category: "aritmetika",
+        difficulty: "Mudah",
+        question: "Rumus suku ke-n suatu barisan adalah $U_n = 3n + 2$. Jumlah suku ke-25 dan suku ke-27 dari barisan tersebut adalah...",
+        options: ["154", "160", "164", "166"],
+        answerIndex: 1, // B
+        explanation: "Suku ke-25 ($U_{25} = 77$) dan Suku ke-27 ($U_{27} = 83$). Jumlahnya adalah $77 + 83 = 160$."
+      },
+      {
+        id: 50,
+        category: "geometri",
+        difficulty: "Sukar",
+        question: "Peneliti A dan B mengembangbiakkan masing-masing 35 amuba. Amuba Peneliti A mampu membelah diri menjadi dua setiap 15 menit sedangkan amuba Peneliti B membelah diri menjadi dua setiap 25 menit. Amuba peneliti A saat ini menjadi 1.120. Peneliti B akan memiliki amuba saat ini sebanyak...",
+        options: ["135", "192", "256", "280"],
+        answerIndex: 3, // D
+        explanation: "Sama seperti pembahasan soal nomor 2. Amuba peneliti B pada menit ke-75 berkembang biak sebanyak 3 generasi, menjadi $35 \\times 8 = 280$ amuba."
+      },
+      {
+        id: 51,
+        category: "konfigurasi",
+        difficulty: "Menengah",
+        question: "Perhatikan susunan titik berikut! Jika pola tersebut berlanjut, maka jumlah titik pada pola ke-6 adalah...",
+        options: ["15", "18", "21", "28"],
+        answerIndex: 2, // C
+        svgType: "dots-triangle",
+        explanation: "Pola susunan titik adalah pola bilangan segitiga:<br>Pola 1 = 1<br>Pola 2 = 3<br>Pola 3 = 6<br>Pola 4 = 10<br>Maka pola ke-6: $U_6 = \\frac{6 \\times 7}{2} = 21$ titik."
+      },
+      {
+        id: 52,
+        category: "aritmetika",
+        difficulty: "Sukar",
+        question: "Seorang tukang memotong papan kayu dengan berbagai ukuran panjang. Potongan pertama panjangnya 240 cm, dan setiap potongan berikutnya lebih pendek 12 cm dari potongan sebelumnya. Tukang tersebut menghasilkan 9 potongan kayu. Pernyataan yang BENAR adalah...",
+        options: [
+          "Panjang potongan ke-5 adalah 190 cm",
+          "Panjang potongan terakhir (ke-9) adalah 144 cm",
+          "Selisih potongan ke-2 dan ke-8 adalah 60 cm",
+          "Panjang potongan ke-5 adalah 180 cm"
+        ],
+        answerIndex: 1, // B
+        explanation: "Barisan aritmetika dengan $a = 240$ dan beda $b = -12$.<br>Pernyataan analisis:<br>- Potongan ke-5: $U_5 = 240 + 4(-12) = 192 \\text{ cm}$ (Opsi A dan D salah).<br>- Potongan ke-9: $U_9 = 240 + 8(-12) = 240 - 96 = 144 \\text{ cm}$ (Opsi B BENAR)."
+      },
+      {
+        id: 53,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Diketahui barisan aritmetika 4, 6, p, ... Berdasarkan informasi tersebut, tentukan pernyataan berikut yang benar:<br>1. Nilai p = 8<br>2. Nilai suku ke-50 adalah 102<br>3. Selisih suku ke-50 dengan suku ke-3 adalah 94",
+        options: [
+          "Pernyataan 1 dan 2",
+          "Pernyataan 1 dan 3",
+          "Pernyataan 2 dan 3",
+          "Pernyataan 1, 2, dan 3"
+        ],
+        answerIndex: 3, // D
+        explanation: "Barisan memiliki $a = 4, b = 2$.<br>- Suku ketiga $p = 4 + 2(2) = 8$ (Pernyataan 1 benar).<br>- Suku ke-50: $U_{50} = 4 + 49(2) = 102$ (Pernyataan 2 benar).<br>- Selisih suku ke-50 dan suku ke-3: $102 - 8 = 94$ (Pernyataan 3 benar).<br>Maka seluruh pernyataan 1, 2, dan 3 adalah benar."
+      },
+      {
+        id: 54,
+        category: "aritmetika",
+        difficulty: "Menengah",
+        question: "Seorang pelari marathon berlatih setiap hari. Pada hari pertama ia menempuh jarak 10 kilometer, dan untuk setiap hari berikutnya ia selalu menambah jarak larinya sejauh 2 kilometer. Jika pelari tersebut berlatih selama 10 hari, maka jumlah jarak total yang telah ia tempuh selama 10 hari adalah...",
+        options: ["162 km", "190 km", "200 km", "220 km"],
+        answerIndex: 1, // B
+        explanation: "Deret aritmetika dengan $a = 10, b = 2, n = 10$.<br>Jumlah jarak total:<br>$S_{10} = \\frac{10}{2}[2(10) + 9(2)] = 5[20 + 18] = 5 \\times 38 = 190 \\text{ km}$."
+      },
+      {
+        id: 55,
+        category: "konfigurasi",
+        difficulty: "Sukar",
+        question: "Perhatikan ilustrasi kisi ubin (grid) persegi berwarna biru dan kuning di atas! Ditinjau pernyataan berikut:<br>1. Banyak persegi kuning pola ke-6 adalah 30<br>2. Banyak persegi biru pola ke-6 adalah 42<br>3. Selisih kuning dan biru pada pola ke-6 adalah 12<br>4. Jumlah kuning dan biru pada pola ke-6 adalah 72<br>Pernyataan yang benar adalah...",
+        options: [
+          "Pernyataan 1, 2, dan 3",
+          "Pernyataan 1, 3, dan 4",
+          "Pernyataan 2, 3, dan 4",
+          "Pernyataan 1, 2, 3, dan 4"
+        ],
+        answerIndex: 3, // D
+        svgType: "blue-yellow-grids",
+        explanation: "Pola ubin persegi bersarang:<br>Jumlah persegi biru mengikuti barisan persegi panjang: $U_n = n(n+1)$. Untuk $n=6 \\implies U_6 = 42$ biru. (Pernyataan 2 benar).<br>Jumlah persegi kuning di sekelilingnya mengikuti pola: $U_n = 4n + 6$. Untuk $n=6 \\implies U_6 = 30$ kuning. (Pernyataan 1 benar).<br>Selisih: $42 - 30 = 12$ (Pernyataan 3 benar).<br>Jumlah total ubin: $42 + 30 = 72$ (Pernyataan 4 benar).<br>Maka seluruh pernyataan 1, 2, 3, dan 4 adalah benar."
+      },
+      {
+        id: 56,
+        category: "konfigurasi",
+        difficulty: "Sukar",
+        question: "Rijal sangat suka dengan kemegahan Candi Borobudur. Dia terinspirasi membuat model Candi Borobudur menggunakan kubus mainan yang disusun bertingkat sedemikian rupa dengan warna hijau dan kuning bergantian di setiap tingkatnya seperti pada gambar. Apabila ia berencana membuat 10 tingkat, maka banyak kubus berwarna kuning yang diperlukan Rijal adalah...",
+        options: ["165 buah", "220 buah", "385 buah", "506 buah"],
+        answerIndex: 1, // B (220)
+        svgType: "borobudur-cubes",
+        explanation: "Pola tumpukan kubus mainan Borobudur dibuat berselang-seling per tingkatnya:<br>- Tingkat 1 (paling atas): 1 kubus berwarna hijau ($1^2 = 1$).<br>- Tingkat 2: 4 kubus berwarna kuning ($2^2 = 4$).<br>- Tingkat 3: 9 kubus berwarna hijau ($3^2 = 9$).<br>- Tingkat 4: 16 kubus berwarna kuning ($4^2 = 16$).<br>Dan seterusnya sampai Tingkat 10.<br>Maka, kubus berwarna kuning hanya terdapat pada tingkat-tingkat genap (tingkat 2, 4, 6, 8, dan 10).<br>Jumlah kubus kuning total:<br>$S_{\\text{kuning}} = 2^2 + 4^2 + 6^2 + 8^2 + 10^2$<br>$S_{\\text{kuning}} = 4 + 16 + 36 + 64 + 100 = 220$ buah kubus."
+      }
+    ];
+
+    // App State
+    let currentFilteredQuestions = [...questions];
+    let currentIdx = 0;
+    let userAnswers = Array(questions.length).fill(null);
+    let quizStartTime = Date.now();
+    let timerInterval = null;
+    let isQuizCompleted = false;
+
+    // SVG Drawing Functions based on type
+    function drawSVG(type, container) {
+      container.innerHTML = "";
+      container.classList.remove("hidden");
+
+      let svgContent = "";
+      if (type === "squares-lidi") {
+        svgContent = `
+          <svg viewBox="0 0 450 100" class="w-full max-w-md h-24">
+            <!-- Pola 1 -->
+            <rect x="10" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="25" y="90" fill="#64748b" font-size="12" font-weight="bold">(1)</text>
+            <!-- Pola 2 -->
+            <rect x="100" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <rect x="140" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="130" y="90" fill="#64748b" font-size="12" font-weight="bold">(2)</text>
+            <!-- Pola 3 -->
+            <rect x="220" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <rect x="260" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <rect x="300" y="30" width="40" height="40" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="270" y="90" fill="#64748b" font-size="12" font-weight="bold">(3)</text>
+          </svg>
+        `;
+      } else if (type === "triangles-lidi") {
+        svgContent = `
+          <svg viewBox="0 0 450 100" class="w-full max-w-md h-24">
+            <!-- Pola 1 -->
+            <polygon points="20,70 40,30 60,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="35" y="90" fill="#64748b" font-size="12" font-weight="bold">(1)</text>
+            <!-- Pola 2 -->
+            <polygon points="100,70 120,30 140,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="120,30 140,70 160,30" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="140,70 160,30 180,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="135" y="90" fill="#64748b" font-size="12" font-weight="bold">(2)</text>
+            <!-- Pola 3 -->
+            <polygon points="240,70 260,30 280,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="260,30 280,70 300,30" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="280,70 300,30 320,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="300,30 320,70 340,30" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <polygon points="320,70 340,30 360,70" stroke="#4f46e5" stroke-width="3" fill="none"/>
+            <text x="295" y="90" fill="#64748b" font-size="12" font-weight="bold">(3)</text>
+          </svg>
+        `;
+      } else if (type === "cross-squares") {
+        svgContent = `
+          <svg viewBox="0 0 450 120" class="w-full max-w-md h-28">
+            <!-- Pola 1 -->
+            <rect x="25" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <text x="30" y="100" fill="#64748b" font-size="12" font-weight="bold">(1)</text>
+            <!-- Pola 2 -->
+            <rect x="120" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#818cf8"/>
+            <rect x="120" y="25" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="120" y="65" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="100" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="140" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <text x="125" y="105" fill="#64748b" font-size="12" font-weight="bold">(2)</text>
+            <!-- Pola 3 -->
+            <rect x="270" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#4f46e5"/>
+            <!-- arms of length 2 -->
+            <rect x="270" y="25" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#818cf8"/>
+            <rect x="270" y="5" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="270" y="65" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#818cf8"/>
+            <rect x="270" y="85" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="250" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#818cf8"/>
+            <rect x="230" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <rect x="290" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#818cf8"/>
+            <rect x="310" y="45" width="20" height="20" stroke="#4f46e5" stroke-width="2" fill="#e0e7ff"/>
+            <text x="275" y="115" fill="#64748b" font-size="12" font-weight="bold">(3)</text>
+          </svg>
+        `;
+      } else if (type === "matchstick-pyramid") {
+        // Redrawn to precisely match image_127b63.png: solid lines and prominent dark dots on intersections
+        svgContent = `
+          <svg viewBox="0 0 550 150" class="w-full max-w-lg h-36">
+            <!-- (1) Level 1 -->
+            <g transform="translate(10, 20)">
+              <line x1="40" y1="90" x2="65" y2="40" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="90" y1="90" x2="65" y2="40" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="40" y1="90" x2="90" y2="90" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              
+              <circle cx="40" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="90" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="65" cy="40" r="5" fill="#0f172a"/>
+              <text x="58" y="120" fill="#475569" font-size="14" font-weight="bold">(1)</text>
+            </g>
+
+            <!-- (2) Level 2 -->
+            <g transform="translate(160, 20)">
+              <!-- Base Layer -->
+              <line x1="30" y1="90" x2="110" y2="90" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <!-- Mid Layer -->
+              <line x1="50" y1="50" x2="90" y2="50" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <!-- Diagonals Left -->
+              <line x1="30" y1="90" x2="70" y2="10" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="70" y1="90" x2="90" y2="50" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <!-- Diagonals Right -->
+              <line x1="110" y1="90" x2="70" y2="10" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="70" y1="90" x2="50" y2="50" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Intersections -->
+              <circle cx="30" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="70" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="110" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="50" cy="50" r="5" fill="#0f172a"/>
+              <circle cx="90" cy="50" r="5" fill="#0f172a"/>
+              <circle cx="70" cy="10" r="5" fill="#0f172a"/>
+              <text x="62" y="120" fill="#475569" font-size="14" font-weight="bold">(2)</text>
+            </g>
+
+            <!-- (3) Level 3 -->
+            <g transform="translate(340, 20)">
+              <!-- Horizontals -->
+              <line x1="20" y1="90" x2="140" y2="90" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="40" y1="60" x2="120" y2="60" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="60" y1="30" x2="100" y2="30" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              
+              <!-- Diagonals Left-to-Right Up -->
+              <line x1="20" y1="90" x2="80" y2="0" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="60" y1="90" x2="100" y2="30" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="100" y1="90" x2="120" y2="60" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Diagonals Right-to-Left Up -->
+              <line x1="140" y1="90" x2="80" y2="0" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="100" y1="90" x2="60" y2="30" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+              <line x1="60" y1="90" x2="40" y2="60" stroke="#1e1b4b" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Intersections -->
+              <circle cx="20" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="60" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="100" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="140" cy="90" r="5" fill="#0f172a"/>
+              <circle cx="40" cy="60" r="5" fill="#0f172a"/>
+              <circle cx="80" cy="60" r="5" fill="#0f172a"/>
+              <circle cx="120" cy="60" r="5" fill="#0f172a"/>
+              <circle cx="60" cy="30" r="5" fill="#0f172a"/>
+              <circle cx="100" cy="30" r="5" fill="#0f172a"/>
+              <circle cx="80" cy="0" r="5" fill="#0f172a"/>
+              <text x="72" y="120" fill="#475569" font-size="14" font-weight="bold">(3)</text>
+            </g>
+          </svg>
+        `;
+      } else if (type === "matchstick-pyramid-7") {
+        // Styled similarly as matchstick-pyramid for consistency with image_127b63.png
+        svgContent = `
+          <svg viewBox="0 0 320 180" class="w-full max-w-xs h-36">
+            <g transform="translate(10, 10)">
+              <!-- Grid line base -->
+              <line x1="20" y1="130" x2="260" y2="130" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="50" y1="95" x2="230" y2="95" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="80" y1="60" x2="200" y2="60" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="110" y1="25" x2="170" y2="25" stroke="#1e1b4b" stroke-width="2.5"/>
+
+              <!-- Left slant diagonals -->
+              <line x1="20" y1="130" x2="140" y2="0" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="80" y1="130" x2="170" y2="25" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="140" y1="130" x2="200" y2="60" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="200" y1="130" x2="230" y2="95" stroke="#1e1b4b" stroke-width="2.5"/>
+
+              <!-- Right slant diagonals -->
+              <line x1="260" y1="130" x2="140" y2="0" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="200" y1="130" x2="110" y2="25" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="140" y1="130" x2="80" y2="60" stroke="#1e1b4b" stroke-width="2.5"/>
+              <line x1="80" y1="130" x2="50" y2="95" stroke="#1e1b4b" stroke-width="2.5"/>
+
+              <!-- Nodes -->
+              <circle cx="140" cy="0" r="4.5" fill="#0f172a"/>
+              <circle cx="110" cy="25" r="4.5" fill="#0f172a"/>
+              <circle cx="170" cy="25" r="4.5" fill="#0f172a"/>
+              <circle cx="80" cy="60" r="4.5" fill="#0f172a"/>
+              <circle cx="140" cy="60" r="4.5" fill="#0f172a"/>
+              <circle cx="200" cy="60" r="4.5" fill="#0f172a"/>
+              <circle cx="50" cy="95" r="4.5" fill="#0f172a"/>
+              <circle cx="110" cy="95" r="4.5" fill="#0f172a"/>
+              <circle cx="170" cy="95" r="4.5" fill="#0f172a"/>
+              <circle cx="230" cy="95" r="4.5" fill="#0f172a"/>
+              <circle cx="20" cy="130" r="4.5" fill="#0f172a"/>
+              <circle cx="80" cy="130" r="4.5" fill="#0f172a"/>
+              <circle cx="140" cy="130" r="4.5" fill="#0f172a"/>
+              <circle cx="200" cy="130" r="4.5" fill="#0f172a"/>
+              <circle cx="260" cy="130" r="4.5" fill="#0f172a"/>
+            </g>
+          </svg>
+        `;
+      } else if (type === "del-circles") {
+        // Redrawn to precisely match image_12837c.png: stacked touching circles
+        svgContent = `
+          <svg viewBox="0 0 520 160" class="w-full max-w-lg h-36">
+            <!-- Pola [1] -->
+            <g transform="translate(10, 10)">
+              <!-- Row 1 (Base, 2 circles) -->
+              <circle cx="30" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="70" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 2 (Top, 1 circle) -->
+              <circle cx="50" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <text x="40" y="145" fill="#334155" font-size="14" font-weight="bold">[1]</text>
+            </g>
+
+            <!-- Pola [2] -->
+            <g transform="translate(120, 10)">
+              <!-- Row 1 (Base, 3 circles) -->
+              <circle cx="30" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="70" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="110" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 2 (Mid, 2 circles) -->
+              <circle cx="50" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="90" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 3 (Top, 1 circle) -->
+              <circle cx="70" cy="30.8" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <text x="60" y="145" fill="#334155" font-size="14" font-weight="bold">[2]</text>
+            </g>
+
+            <!-- Pola [3] -->
+            <g transform="translate(260, 10)">
+              <!-- Row 1 (Base, 4 circles) -->
+              <circle cx="30" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="70" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="110" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="150" cy="100" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 2 -->
+              <circle cx="50" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="90" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="130" cy="65.4" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 3 -->
+              <circle cx="70" cy="30.8" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <circle cx="110" cy="30.8" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <!-- Row 4 -->
+              <circle cx="90" cy="-3.8" r="20" stroke="#475569" stroke-width="2.5" fill="#ffffff" />
+              <text x="80" y="145" fill="#334155" font-size="14" font-weight="bold">[3]</text>
+            </g>
+          </svg>
+        `;
+      } else if (type === "cross-dots") {
+        // Redrawn to precisely match image_12877f.png (X-shaped dotted pattern with (1) as 1 single dot)
+        svgContent = `
+          <svg viewBox="0 0 550 140" class="w-full max-w-lg h-36">
+            <!-- (1) -->
+            <g transform="translate(10, 20)">
+              <circle cx="50" cy="70" r="7" fill="#0f172a"/>
+              <text x="42" y="125" fill="#334155" font-size="14" font-weight="bold">(1)</text>
+            </g>
+
+            <!-- (2) -->
+            <g transform="translate(100, 20)">
+              <!-- Center -->
+              <circle cx="60" cy="70" r="7" fill="#0f172a"/>
+              <!-- Corners -->
+              <circle cx="35" cy="45" r="7" fill="#0f172a"/>
+              <circle cx="85" cy="45" r="7" fill="#0f172a"/>
+              <circle cx="35" cy="95" r="7" fill="#0f172a"/>
+              <circle cx="85" cy="95" r="7" fill="#0f172a"/>
+              <text x="52" y="125" fill="#334155" font-size="14" font-weight="bold">(2)</text>
+            </g>
+
+            <!-- (3) -->
+            <g transform="translate(220, 20)">
+              <!-- Center -->
+              <circle cx="70" cy="70" r="7" fill="#0f172a"/>
+              <!-- Layer 1 -->
+              <circle cx="50" cy="50" r="7" fill="#0f172a"/>
+              <circle cx="90" cy="50" r="7" fill="#0f172a"/>
+              <circle cx="50" cy="90" r="7" fill="#0f172a"/>
+              <circle cx="90" cy="90" r="7" fill="#0f172a"/>
+              <!-- Layer 2 -->
+              <circle cx="30" cy="30" r="7" fill="#0f172a"/>
+              <circle cx="110" cy="30" r="7" fill="#0f172a"/>
+              <circle cx="30" cy="110" r="7" fill="#0f172a"/>
+              <circle cx="110" cy="110" r="7" fill="#0f172a"/>
+              <text x="62" y="130" fill="#334155" font-size="14" font-weight="bold">(3)</text>
+            </g>
+
+            <!-- (4) -->
+            <g transform="translate(380, 20)">
+              <!-- Center -->
+              <circle cx="80" cy="70" r="7" fill="#0f172a"/>
+              <!-- Layer 1 -->
+              <circle cx="60" cy="50" r="7" fill="#0f172a"/>
+              <circle cx="100" cy="50" r="7" fill="#0f172a"/>
+              <circle cx="60" cy="90" r="7" fill="#0f172a"/>
+              <circle cx="100" cy="90" r="7" fill="#0f172a"/>
+              <!-- Layer 2 -->
+              <circle cx="40" cy="30" r="7" fill="#0f172a"/>
+              <circle cx="120" cy="30" r="7" fill="#0f172a"/>
+              <circle cx="40" cy="110" r="7" fill="#0f172a"/>
+              <circle cx="120" cy="110" r="7" fill="#0f172a"/>
+              <!-- Layer 3 -->
+              <circle cx="20" cy="10" r="7" fill="#0f172a"/>
+              <circle cx="140" cy="10" r="7" fill="#0f172a"/>
+              <circle cx="20" cy="130" r="7" fill="#0f172a"/>
+              <circle cx="140" cy="130" r="7" fill="#0f172a"/>
+              <text x="72" y="130" fill="#334155" font-size="14" font-weight="bold">(4)</text>
+            </g>
+          </svg>
+        `;
+      } else if (type === "dots-triangle") {
+        svgContent = `
+          <svg viewBox="0 0 450 100" class="w-full max-w-md h-24">
+            <!-- Pola 1 -->
+            <circle cx="30" cy="50" r="6" fill="#10b981"/>
+            <text x="15" y="80" fill="#64748b" font-size="12" font-weight="bold">Pola 1</text>
+            <!-- Pola 2 -->
+            <circle cx="120" cy="40" r="6" fill="#10b981"/>
+            <circle cx="140" cy="40" r="6" fill="#10b981"/>
+            <circle cx="120" cy="60" r="6" fill="#10b981"/>
+            <text x="115" y="80" fill="#64748b" font-size="12" font-weight="bold">Pola 2</text>
+            <!-- Pola 3 -->
+            <circle cx="230" cy="30" r="6" fill="#10b981"/>
+            <circle cx="250" cy="30" r="6" fill="#10b981"/>
+            <circle cx="270" cy="30" r="6" fill="#10b981"/>
+            <circle cx="230" cy="50" r="6" fill="#10b981"/>
+            <circle cx="250" cy="50" r="6" fill="#10b981"/>
+            <circle cx="230" cy="70" r="6" fill="#10b981"/>
+            <text x="235" y="90" fill="#64748b" font-size="12" font-weight="bold">Pola 3</text>
+          </svg>
+        `;
+      } else if (type === "blue-yellow-grids") {
+        // Redrawn to precisely match image_1299ca.png (kisi kuning di pinggir, biru di dalam dengan panah penunjuk)
+        svgContent = `
+          <svg viewBox="0 0 650 180" class="w-full max-w-2xl h-44">
+            <!-- (1) Grid Size: 3x4 (Blue 1x2 in center) -->
+            <g transform="translate(10, 20)">
+              <!-- Row 1 -->
+              <rect x="0" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="30" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 2 -->
+              <rect x="0" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="30" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 3 -->
+              <rect x="0" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="30" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 4 -->
+              <rect x="0" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="30" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <text x="12" y="80" fill="#334155" font-size="12" font-weight="bold">(1)</text>
+            </g>
+
+            <!-- (2) Grid Size: 4x5 (Blue 2x3 in center) with exact arrows like image_1299ca.png -->
+            <g transform="translate(100, 20)">
+              <!-- Draw tiles -->
+              <!-- Row 1 -->
+              <rect x="0" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="30" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="45" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 2 -->
+              <rect x="0" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="30" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="45" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 3 -->
+              <rect x="0" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="30" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="45" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 4 -->
+              <rect x="0" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="30" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/>
+              <rect x="45" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 5 -->
+              <rect x="0" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="15" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="30" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <rect x="45" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+
+              <!-- Arrow pointing to Blue -->
+              <line x1="-30" y1="20" x2="18" y2="33" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <text x="-55" y="18" fill="#000000" font-size="12">biru</text>
+              
+              <!-- Arrow pointing to Yellow -->
+              <line x1="12" y1="-20" x2="33" y2="4" stroke="#000000" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <text x="-5" y="-23" fill="#000000" font-size="12">kuning</text>
+
+              <text x="22" y="95" fill="#334155" font-size="12" font-weight="bold">(2)</text>
+            </g>
+
+            <!-- (3) Grid Size: 5x6 (Blue 3x4 in center) -->
+            <g transform="translate(260, 20)">
+              <!-- Draw tiles -->
+              <!-- Row 1 -->
+              <rect x="0" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="30" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="45" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="60" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 2 -->
+              <rect x="0" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 3 -->
+              <rect x="0" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 4 -->
+              <rect x="0" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 5 -->
+              <rect x="0" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 6 -->
+              <rect x="0" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="30" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="45" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="60" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <text x="30" y="110" fill="#334155" font-size="12" font-weight="bold">(3)</text>
+            </g>
+
+            <!-- (4) Grid Size: 6x7 (Blue 4x5 in center) -->
+            <g transform="translate(430, 20)">
+              <!-- Row 1 -->
+              <rect x="0" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="30" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="45" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="60" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="75" y="0" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 2 -->
+              <rect x="0" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="15" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="75" y="15" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 3 -->
+              <rect x="0" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="30" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="75" y="30" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 4 -->
+              <rect x="0" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="45" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="75" y="45" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 5 -->
+              <rect x="0" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="60" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="75" y="60" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 6 -->
+              <rect x="0" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="75" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="30" y="75" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="45" y="75" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="60" y="75" width="15" height="15" fill="#38bdf8" stroke="#1e293b"/><rect x="75" y="75" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <!-- Row 7 -->
+              <rect x="0" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="15" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="30" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="45" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="60" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/><rect x="75" y="90" width="15" height="15" fill="#facc15" stroke="#1e293b"/>
+              <text x="35" y="125" fill="#334155" font-size="12" font-weight="bold">(4)</text>
+            </g>
+
+            <!-- Definitions for arrowhead markers -->
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#000" />
+              </marker>
+            </defs>
+          </svg>
+        `;
+      } else if (type === "borobudur-cubes") {
+        // Redrawn to precisely match image_129a63.png: alternated step pyramid of 3D-projected cubes (Green at odd levels, Yellow at even levels)
+        svgContent = `
+          <svg viewBox="0 0 300 240" class="w-full max-w-xs h-48">
+            <!-- Level 1 (Top, 1x1 Green Cube) -->
+            <g transform="translate(130, 20)">
+              <polygon points="20,10 40,0 60,10 40,20" fill="#22c55e" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="20,10 40,20 40,40 20,30" fill="#15803d" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="40,20 60,10 60,30 40,40" fill="#166534" stroke="#1e293b" stroke-width="1.5"/>
+            </g>
+
+            <!-- Level 2 (2x2 Yellow Cubes) -->
+            <g transform="translate(110, 50)">
+              <!-- Back Left -->
+              <polygon points="20,10 40,0 60,10 40,20" fill="#eab308" stroke="#1e293b" stroke-dasharray="2,2"/>
+              <!-- Back Right -->
+              <polygon points="40,20 60,10 80,20 60,30" fill="#eab308" stroke="#1e293b" stroke-dasharray="2,2"/>
+              <!-- Front Left -->
+              <polygon points="0,20 20,10 40,20 20,30" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="0,20 20,30 20,50 0,40" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+              <!-- Front Right -->
+              <polygon points="20,30 40,20 60,30 40,40" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="20,30 40,40 40,60 20,50" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="40,40 60,30 60,50 40,60" fill="#a16207" stroke="#1e293b" stroke-width="1.5"/>
+            </g>
+
+            <!-- Level 3 (3x3 Green Cubes) -->
+            <g transform="translate(90, 90)">
+              <!-- Frontmost visible block line -->
+              <polygon points="0,30 20,20 40,30 20,40" fill="#22c55e" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="0,30 20,40 20,60 0,50" fill="#15803d" stroke="#1e293b" stroke-width="1.5"/>
+              
+              <polygon points="20,40 40,30 60,40 40,50" fill="#22c55e" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="20,40 40,50 40,70 20,60" fill="#15803d" stroke="#1e293b" stroke-width="1.5"/>
+              
+              <polygon points="40,50 60,40 80,50 60,60" fill="#22c55e" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="40,50 60,60 60,80 40,70" fill="#15803d" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="60,60 80,50 80,70 60,80" fill="#166534" stroke="#1e293b" stroke-width="1.5"/>
+              
+              <!-- Side blocks -->
+              <polygon points="60,40 80,30 100,40 80,50" fill="#22c55e" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="80,50 100,40 100,60 80,70" fill="#166534" stroke="#1e293b" stroke-width="1.5"/>
+            </g>
+
+            <!-- Level 4 (4x4 Yellow Cubes - Base in this illustration) -->
+            <g transform="translate(70, 140)">
+              <polygon points="0,40 20,30 40,40 20,50" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="0,40 20,50 20,70 0,60" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+
+              <polygon points="20,50 40,40 60,50 40,60" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="20,50 40,60 40,80 20,70" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+
+              <polygon points="40,60 60,40 80,50 60,70" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="40,60 60,70 60,90 40,80" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+
+              <polygon points="60,70 80,60 100,70 80,80" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="60,70 80,80 80,100 60,90" fill="#ca950c" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="80,80 100,70 100,90 80,100" fill="#a16207" stroke="#1e293b" stroke-width="1.5"/>
+
+              <!-- Side Block -->
+              <polygon points="80,60 100,50 120,60 100,70" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="100,70 120,60 120,80 100,90" fill="#a16207" stroke="#1e293b" stroke-width="1.5"/>
+              
+              <!-- Side Block 2 -->
+              <polygon points="100,50 120,40 140,50 120,60" fill="#facc15" stroke="#1e293b" stroke-width="1.5"/>
+              <polygon points="120,60 140,50 140,70 120,80" fill="#a16207" stroke="#1e293b" stroke-width="1.5"/>
+            </g>
+          </svg>
+        `;
+      } else {
+        container.classList.add("hidden");
+      }
+
+      if (svgContent) {
+        container.innerHTML = svgContent;
+      }
+    }
+
+    // Initialize Timer
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const diff = Date.now() - quizStartTime;
+        const hrs = String(Math.floor(diff / 3600000)).padStart(2, '0');
+        const mins = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+        const secs = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        document.getElementById('quiz-timer').innerText = `${hrs}:${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // Render navigation Grid
+    function renderQuestionGrid() {
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = "";
+      
+      currentFilteredQuestions.forEach((q, idx) => {
+        const originalIndex = questions.findIndex(item => item.id === q.id);
+        const isAnswered = userAnswers[originalIndex] !== null;
+        const isCurrent = currentIdx === idx;
+        
+        let btnClass = "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs sm:text-sm border transition ";
+        if (isCurrent) {
+          btnClass += "bg-indigo-600 text-white border-indigo-600 ring-2 ring-indigo-500/30";
+        } else if (isAnswered) {
+          btnClass += "bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600";
+        } else {
+          btnClass += "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700";
+        }
+        
+        const btn = document.createElement('button');
+        btn.className = btnClass;
+        btn.innerText = q.id;
+        btn.onclick = () => jumpToQuestion(idx);
+        grid.appendChild(btn);
+      });
+
+      // Update ratios
+      const answeredCount = userAnswers.filter(a => a !== null).length;
+      document.getElementById('answered-ratio').innerText = `${answeredCount}/56 Terjawab`;
+    }
+
+    // Load active Question
+    function loadQuestion() {
+      if (isQuizCompleted) return;
+      
+      const q = currentFilteredQuestions[currentIdx];
+      const originalIndex = questions.findIndex(item => item.id === q.id);
+      
+      // Update tags
+      document.getElementById('current-question-tag').innerText = `Soal ${currentIdx + 1} dari ${currentFilteredQuestions.length} (ID: ${q.id})`;
+      document.getElementById('current-difficulty').innerText = q.difficulty;
+      document.getElementById('question-category-tag').innerText = "Kategori: " + q.category.charAt(0).toUpperCase() + q.category.slice(1);
+      document.getElementById('question-text').innerHTML = q.question;
+      
+      // Draw SVG visualization if needed
+      const svgContainer = document.getElementById('svg-visualization-container');
+      if (q.svgType) {
+        drawSVG(q.svgType, svgContainer);
+      } else {
+        svgContainer.classList.add("hidden");
+      }
+
+      // Fill Options
+      const optionsGrid = document.getElementById('options-grid');
+      optionsGrid.innerHTML = "";
+      
+      const userAnswer = userAnswers[originalIndex];
+      const showCorrection = userAnswer !== null;
+
+      q.options.forEach((opt, oIdx) => {
+        let optBtnClass = "w-full text-left px-5 py-4 rounded-xl border font-semibold text-sm sm:text-base flex justify-between items-center transition ";
+        let badgeHtml = "";
+
+        if (showCorrection) {
+          if (oIdx === q.answerIndex) {
+            optBtnClass += "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 text-emerald-700 dark:text-emerald-400";
+            badgeHtml = `<span class="bg-emerald-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>`;
+          } else if (oIdx === userAnswer) {
+            optBtnClass += "bg-rose-50 dark:bg-rose-950/30 border-rose-500 text-rose-700 dark:text-rose-400";
+            badgeHtml = `<span class="bg-rose-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></span>`;
+          } else {
+            optBtnClass += "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700 text-slate-400";
+          }
+        } else {
+          optBtnClass += "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-500 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 cursor-pointer";
+        }
+
+        const optBtn = document.createElement('button');
+        optBtn.className = optBtnClass;
+        optBtn.disabled = showCorrection;
+        optBtn.innerHTML = `
+          <span>${String.fromCharCode(65 + oIdx)}. ${opt}</span>
+          ${badgeHtml}
+        `;
+        optBtn.onclick = () => selectAnswer(oIdx);
+        optionsGrid.appendChild(optBtn);
+      });
+
+      // Explanation management
+      const explanationPanel = document.getElementById('explanation-panel');
+      const showExpBtn = document.getElementById('show-explanation-btn');
+      
+      if (showCorrection) {
+        showExpBtn.classList.remove("hidden");
+        document.getElementById('explanation-text').innerHTML = q.explanation;
+        explanationPanel.classList.remove("hidden");
+      } else {
+        showExpBtn.classList.add("hidden");
+        explanationPanel.classList.add("hidden");
+      }
+
+      // Nav bar updates
+      document.getElementById('prev-btn').disabled = currentIdx === 0;
+      
+      // If it's the last question and answered, allow finishing
+      const nextBtn = document.getElementById('next-btn');
+      const allFinished = userAnswers.filter(a => a !== null).length === questions.length;
+      if (currentIdx === currentFilteredQuestions.length - 1) {
+        nextBtn.innerHTML = allFinished ? `Selesaikan Kuis <i class="fa-solid fa-flag-checkered ml-1"></i>` : `Selesai <i class="fa-solid fa-flag-checkered ml-1"></i>`;
+      } else {
+        nextBtn.innerHTML = `Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>`;
+      }
+
+      // Re-trigger KaTeX to render formulas
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false}
+          ]
+        });
+      }
+
+      // Progress Tracker updates
+      const progressPercent = ((currentIdx + 1) / currentFilteredQuestions.length) * 100;
+      document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+
+      renderQuestionGrid();
+    }
+
+    // Select Answer
+    function selectAnswer(oIdx) {
+      const q = currentFilteredQuestions[currentIdx];
+      const originalIndex = questions.findIndex(item => item.id === q.id);
+      
+      userAnswers[originalIndex] = oIdx;
+      
+      // Calculate current score
+      let correctCount = 0;
+      userAnswers.forEach((ans, index) => {
+        if (ans !== null && ans === questions[index].answerIndex) {
+          correctCount++;
+        }
+      });
+      // Correct counts +4, Incorrect -1, empty 0
+      let totalScore = 0;
+      userAnswers.forEach((ans, index) => {
+        if (ans !== null) {
+          if (ans === questions[index].answerIndex) {
+            totalScore += 4;
+          } else {
+            totalScore -= 1;
+          }
+        }
+      });
+
+      document.getElementById('score-mini').innerText = `Skor: ${totalScore}`;
+      
+      loadQuestion();
+    }
+
+    // Jump to Question
+    function jumpToQuestion(idx) {
+      currentIdx = idx;
+      loadQuestion();
+    }
+
+    // Navigation Controls
+    function nextQuestion() {
+      if (currentIdx < currentFilteredQuestions.length - 1) {
+        currentIdx++;
+        loadQuestion();
+      } else {
+        showEvaluationDashboard();
+      }
+    }
+
+    // Go back
+    function prevQuestion() {
+      if (currentIdx > 0) {
+        currentIdx--;
+        loadQuestion();
+      }
+    }
+
+    function toggleExplanation() {
+      const panel = document.getElementById('explanation-panel');
+      panel.classList.toggle('hidden');
+    }
+
+    // Filter Questions by Category
+    function filterQuestions(category) {
+      // Toggle button classes
+      const filters = ['all', 'konfigurasi', 'aritmetika', 'geometri'];
+      filters.forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (f === category) {
+          btn.className = "w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300";
+        } else {
+          btn.className = "w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition flex items-center justify-between text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700";
+        }
+      });
+
+      if (category === 'all') {
+        currentFilteredQuestions = [...questions];
+      } else {
+        currentFilteredQuestions = questions.filter(q => q.category === category);
+      }
+
+      currentIdx = 0;
+      loadQuestion();
+    }
+
+    // Compute and Populate Evaluation Dashboard
+    function showEvaluationDashboard() {
+      isQuizCompleted = true;
+      clearInterval(timerInterval);
+
+      // Hide workspace
+      document.getElementById('quiz-workspace').classList.add('hidden');
+      document.getElementById('results-dashboard').classList.remove('hidden');
+
+      // Metric math
+      let correctAnswers = 0;
+      let wrongAnswers = 0;
+      let score = 0;
+
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          if (ans === questions[idx].answerIndex) {
+            correctAnswers++;
+            score += 4;
+          } else {
+            wrongAnswers++;
+            score -= 1;
+          }
+        }
+      });
+
+      const totalTimeDiff = Date.now() - quizStartTime;
+      const hrs = String(Math.floor(totalTimeDiff / 3600000)).padStart(2, '0');
+      const mins = String(Math.floor((totalTimeDiff % 3600000) / 60000)).padStart(2, '0');
+      const secs = String(Math.floor((totalTimeDiff % 60000) / 1000)).padStart(2, '0');
+
+      document.getElementById('result-score').innerText = score;
+      document.getElementById('result-accuracy').innerText = `${Math.round((correctAnswers / questions.length) * 100)}%`;
+      document.getElementById('result-ratio').innerText = `${correctAnswers} Benar, ${wrongAnswers} Salah`;
+      document.getElementById('result-time').innerText = `${hrs}:${mins}:${secs}`;
+
+      // Status Predicate
+      let predikat = "Cukup";
+      let textRecommendation = "";
+      if (score >= 180) {
+        predikat = "Sangat Memuaskan (A)";
+        textRecommendation = "Luar biasa! Anda menguasai topik Pola, Barisan, dan Deret dengan tingkat keakuratan sangat tinggi. Siap melangkah ke tingkat olimpiade matematika sekolah menengah!";
+      } else if (score >= 120) {
+        predikat = "Memuaskan (B)";
+        textRecommendation = "Bagus sekali! Anda memahami dasar-dasar barisan aritmetika, geometri, dan pemecahan masalah konfigurasi objek secara solid. Teruskan latihan pada soal-soal variatif.";
+      } else if (score >= 60) {
+        predikat = "Cukup (C)";
+        textRecommendation = "Cukup Baik. Anda memahami konsep dasar tetapi masih menemui hambatan pada analisis barisan geometri dan manipulasi aljabar deret bertingkat. Fokuskan latihan pada formulasi rumus umum.";
+      } else {
+        predikat = "Butuh Bimbingan (D)";
+        textRecommendation = "Disarankan untuk menelaah ulang materi deret dasar dan berlatih secara bertahap mulai dari pola konfigurasi objek visual sebelum beralih ke deret rumus aljabar.";
+      }
+      document.getElementById('result-status').innerText = predikat;
+      document.getElementById('learning-recommendation').innerHTML = textRecommendation;
+
+      // Group Performance Breakdown
+      const categories = {
+        konfigurasi: { correct: 0, total: 0, label: "Pola Konfigurasi Objek" },
+        aritmetika: { correct: 0, total: 0, label: "Barisan & Deret Aritmetika" },
+        geometri: { correct: 0, total: 0, label: "Barisan & Deret Geometri" }
+      };
+
+      questions.forEach((q, idx) => {
+        categories[q.category].total++;
+        if (userAnswers[idx] === q.answerIndex) {
+          categories[q.category].correct++;
+        }
+      });
+
+      const topicContainer = document.getElementById('topic-bars');
+      topicContainer.innerHTML = "";
+      
+      Object.keys(categories).forEach(catKey => {
+        const cat = categories[catKey];
+        const percent = Math.round((cat.correct / cat.total) * 100) || 0;
+        
+        let barColor = "bg-rose-500";
+        if (percent >= 80) barColor = "bg-emerald-500";
+        else if (percent >= 50) barColor = "bg-amber-500";
+
+        const barHtml = `
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-700 dark:text-slate-300">${cat.label}</span>
+              <span class="text-slate-900 dark:text-white font-bold">${percent}% (${cat.correct}/${cat.total})</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+              <div class="h-full ${barColor}" style="width: ${percent}%"></div>
+            </div>
+          </div>
+        `;
+        topicContainer.innerHTML += barHtml;
+      });
+    }
+
+    // Restart Quiz State
+    function restartQuiz() {
+      userAnswers = Array(questions.length).fill(null);
+      currentIdx = 0;
+      quizStartTime = Date.now();
+      isQuizCompleted = false;
+
+      document.getElementById('score-mini').innerText = `Skor: 0`;
+      document.getElementById('quiz-workspace').classList.remove('hidden');
+      document.getElementById('results-dashboard').classList.add('hidden');
+
+      startTimer();
+      loadQuestion();
+    }
+
+    // Initialize counts on filter sidebar
+    function initFilters() {
+      const counts = { all: questions.length, konfigurasi: 0, aritmetika: 0, geometri: 0 };
+      questions.forEach(q => {
+        counts[q.category]++;
+      });
+
+      document.getElementById('count-all').innerText = counts.all;
+      document.getElementById('count-konfigurasi').innerText = counts.konfigurasi;
+      document.getElementById('count-aritmetika').innerText = counts.aritmetika;
+      document.getElementById('count-geometri').innerText = counts.geometri;
+    }
+
+    // On Load Window
+    window.onload = function() {
+      initFilters();
+      startTimer();
+      loadQuestion();
+    };
+  </script>
+</body>
+</html>
